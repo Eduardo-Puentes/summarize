@@ -155,6 +155,7 @@ function ownBookTemplate(_book) {
 function showFull() {
   var myModal = new bootstrap.Modal(document.getElementById('fullModal'))
   myModal.show()
+
   console.log(fullBook.summary);
   document.getElementsByClassName('book-cover')[0].innerHTML = `<img src="${fullBook.cover}" class="img-fluid" alt="Book Cover">`;
   document.getElementById("summaryContent").innerHTML = `<h3>${fullBook.title}</h3> <p>${fullBook.summary}</p>`
@@ -270,9 +271,7 @@ document.querySelector("#marketplace").addEventListener("click", async (e) => {
         .buyBook(index)
         .send({ from: kit.defaultAccount })
       notification(`🎉 You successfully unlocked "${books[index].title}".`)
-      getProducts()
-      getBalance()
-      getFullBook(index)
+      await getFullBook(index)
       showFull()
     } catch (error) {
       notification(`⚠️ ${error}.`)
