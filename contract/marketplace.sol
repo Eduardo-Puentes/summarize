@@ -14,76 +14,100 @@ interface IERC20Token {
   event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
-contract Marketplace {
+contract Shelf {
 
-    uint internal productsLength = 0;
+    uint internal booksLength = 0;
     address internal cUsdTokenAddress = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
 
-    struct Product {
+    struct Book {
         address payable owner;
-        string name;
-        string image;
-        string description;
-        string location;
+        string title;
+        string cover;
+        string summary;
         uint price;
-        uint sold;
+        uint unlocks;
     }
+    
+    mapping (uint => Book) internal books;
 
-    mapping (uint => Product) internal products;
-
-    function writeProduct(
-        string memory _name,
-        string memory _image,
-        string memory _description, 
-        string memory _location, 
+    function addSummary(
+        string memory _title,
+        string memory _cover,
+        string memory _summary,
         uint _price
     ) public {
-        uint _sold = 0;
-        products[productsLength] = Product(
+        uint _unlocks = 0;
+        books[booksLength] = Book(
             payable(msg.sender),
-            _name,
-            _image,
-            _description,
-            _location,
+            _title,
+            _cover,
+            _summary,
             _price,
-            _sold
+            _unlocks
         );
-        productsLength++;
+        booksLength++;
     }
-
-    function readProduct(uint _index) public view returns (
+    
+    function lockedViewBook(uint _index) public view returns (
         address payable,
-        string memory, 
-        string memory, 
-        string memory, 
-        string memory, 
-        uint, 
+        string memory,
+        string memory,
+        uint,
         uint
     ) {
         return (
-            products[_index].owner,
-            products[_index].name, 
-            products[_index].image, 
-            products[_index].description, 
-            products[_index].location, 
-            products[_index].price,
-            products[_index].sold
+            books[_index].owner,
+            books[_index].title,
+            books[_index].cover,
+            books[_index].price,
+            books[_index].unlocks
         );
     }
     
-    function buyProduct(uint _index) public payable  {
+    function viewBook(uint _index) public view returns (
+        address payable,
+        string memory,
+        string memory,
+        string memory,
+        uint,
+        uint
+    ) {
+        return (
+            books[_index].owner,
+            books[_index].title,
+            books[_index].cover,
+            books[_index].summary,
+            books[_index].price,
+            books[_index].unlocks
+        );
+    }
+    
+    function editSummary(
+        string memory _title,
+        string memory _cover,
+        string memory _summary,
+        uint _price,
+        uint _index
+    ) public {
+        books[_index].title = _title;
+        books[_index].cover = _cover;
+        books[_index].summary = _summary;
+        books[_index].price = _price;
+    }
+
+    function buyBook(uint _index) public payable {
         require(
           IERC20Token(cUsdTokenAddress).transferFrom(
             msg.sender,
-            products[_index].owner,
-            products[_index].price
+            books[_index].owner,
+            books[_index].price
           ),
           "Transfer failed."
         );
-        products[_index].sold++;
+        books[_index].unlocks++;
     }
     
-    function getProductsLength() public view returns (uint) {
-        return (productsLength);
+    function getBooksLength() public view returns (uint) {
+        return (booksLength);
     }
 }

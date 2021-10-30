@@ -1,1 +1,208 @@
-Hello World.
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css"
+    />
+
+    <style>
+      :root {
+        --bs-font-sans-serif: "DM Sans", sans-serif;
+      }
+
+      @media (min-width: 576px) {
+        .card {
+          border: 0;
+          box-shadow: rgb(0 0 0 / 5%) 0px 10px 20px;
+          border-radius: 10px;
+        }
+
+        .card-img-top {
+          width: 100%;
+          height: 20vw;
+          object-fit: cover;
+        }
+      }
+    </style>
+
+    <title>Summaraize</title>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand">Summarize</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+        </div>
+        <span class="nav-link border rounded-pill bg-light">
+          <span id="balance">0</span>
+          cUSD
+        </span>
+        <a
+            class="btn btn-dark rounded-pill"
+            data-bs-toggle="modal"
+            data-bs-target="#addModal"
+          >
+            Add Summary
+          </a>
+      </div>
+    </nav>
+
+    <div class="alert alert-warning sticky-top mt-2" style="height: 50px; position: absolute; width: 100%; top: 50px; z-index: 2;" role="alert">
+      <span id="notification">⌛ Loading...</span>
+    </div>
+
+    <div class="container mt-2" style="max-width: 72em;">
+      <main id="marketplace" class="row" style="margin-top: 55px;"></main>
+    </div>
+
+<!--Modal-->
+    <div
+      class="modal fade"
+      id="addModal"
+      tabindex="-1"
+      aria-labelledby="newProductModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="newProductModalLabel">Book</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-row">
+                <div class="col">
+                  <input
+                    type="text"
+                    id="newBookTitle"
+                    class="form-control mb-2"
+                    placeholder="Book Title"
+                  />
+                </div>
+                <div class="col">
+                  <input
+                    type="text"
+                    id="newImgUrl"
+                    class="form-control mb-2"
+                    placeholder="Cover Image URL"
+                  />
+                </div>
+                <div class="col">
+                  <input
+                    type="text"
+                    id="newSummary"
+                    class="form-control mb-2"
+                    placeholder="Summary"
+                  />
+                </div>
+                <div class="col">
+                  <input
+                    type="text"
+                    id="newPrice"
+                    class="form-control mb-2"
+                    placeholder="Price"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-light border"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-dark"
+              data-bs-dismiss="modal"
+              id="newSummaryBtn"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+<!--/Modal-->
+
+<!--Content Modal-->
+<div
+class="modal fade"
+id="fullModal"
+tabindex="-1"
+aria-labelledby="newProductModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="newProductModalLabel">Summary</h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2">
+          <div class="col book-cover">
+            
+          </div>
+          <div class="col" id="summaryContent">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-dark border"
+        data-bs-dismiss="modal"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<!--/Modal-->
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/ethereum-blockies@0.1.1/blockies.min.js"></script>
+  </body>
+</html>
