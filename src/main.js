@@ -5,7 +5,7 @@ import marketplaceAbi from "../contract/marketplace.abi.json"
 import erc20Abi from "../contract/erc20.abi.json"
 
 const ERC20_DECIMALS = 18
-const MPContractAddress = "0xd7F008299bC93Ee64d376a27a302dA06396aC4B6"
+const MPContractAddress = "0x6b8a3C7A2F1D3A55F043608a3Ae59bA01C56ACc1"
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
 let kit
@@ -13,6 +13,8 @@ let contract
 let books = []
 let fullBook = []
 let session
+let edit = false;
+let edit_index
 
 const connectCeloWallet = async function () {
   if (window.celo) {
@@ -87,7 +89,6 @@ const getFullBook = async function(i) {
       })
     })
   fullBook = await Promise.resolve(_book)
-  showFull()
 }
 
 function renderBooks() {
@@ -199,25 +200,60 @@ window.addEventListener("load", async () => {
 document
   .querySelector("#newSummaryBtn")
   .addEventListener("click", async (e) => {
-    const params = [
-      document.getElementById("newBookTitle").value,
-      document.getElementById("newImgUrl").value,
-      document.getElementById("newSummary").value,
-      new BigNumber(document.getElementById("newPrice").value)
-      .shiftedBy(ERC20_DECIMALS)
-      .toString()
-    ]
-    notification(`⌛ Adding "${params[0]}"...`)
-    try {
-      const result = await contract.methods
-        .addSummary(...params)
-        .send({ from: kit.defaultAccount })
-    } catch (error) {
-      notification(`⚠️ ${error}.`)
+    if(!edit){
+      const params = [
+        document.getElementById("newBookTitle").value,
+        document.getElementById("newImgUrl").value,
+        document.getElementById("newSummary").value,
+        new BigNumber(document.getElementById("newPrice").value)
+        .shiftedBy(ERC20_DECIMALS)
+        .toString()
+      ]
+      notification(`⌛ Adding "${params[0]}"...`)
+      try {
+        const result = await contract.methods
+          .addSummary(...params)
+          .send({ from: kit.defaultAccount })
+      } catch (error) {
+        notification(`⚠️ ${error}.`)
+      }
+      notification(`🎉 You successfully added "${params[0]}".`)
+      getProducts()
     }
-    notification(`🎉 You successfully added "${params[0]}".`)
-    getProducts()
+    else {
+      console.log(document.getElementById("newBookTitle").value);
+      console.log(edit_index);
+      const params = [
+        document.getElementById("newBookTitle").value,
+        document.getElementById("newImgUrl").value,
+        document.getElementById("newSummary").value,
+        new BigNumber(document.getElementById("newPrice").value)
+        .shiftedBy(ERC20_DECIMALS)
+        .toString(),
+        parseInt(edit_index)
+      ]
+      console.log(params);
+      notification(`⌛ Editing "${params[0]}"...`)
+      try {
+        const result = await contract.methods
+          .editSummary(...params)
+          .send({ from: kit.defaultAccount })
+          console.log(result);
+          notification(`🎉 You successfully edited "${params[0]}".`)
+      getProducts()
+      edit = false
+      } catch (error) {
+        notification(`⚠️ ${error}.`)
+      }
+    }
   })
+
+document.querySelector(".adding-modal").addEventListener("click", async (e) => {
+  document.getElementById("newBookTitle").value = ""
+  document.getElementById("newImgUrl").value = ""
+  document.getElementById("newSummary").value = ""
+  document.getElementById("newPrice").value = ""
+} )
 
 document.querySelector("#marketplace").addEventListener("click", async (e) => {
   if (e.target.className.includes("buyBtn")) {
@@ -237,16 +273,21 @@ document.querySelector("#marketplace").addEventListener("click", async (e) => {
       getProducts()
       getBalance()
       getFullBook(index)
+      showFull()
     } catch (error) {
       notification(`⚠️ ${error}.`)
     }
   }
   else if (e.target.className.includes("panelEditBtn")){
     const index = e.target.id
-    document.getElementById("newBookTitle").value = books[index].title
-    document.getElementById("newImgUrl").value = books[index].cover
-    document.getElementById("newSummary").value = books[index].summary
-    document.getElementById("newPrice").value = books[index].price.shiftedBy(-ERC20_DECIMALS)
-
+    edit = true
+    edit_index = index
+    console.log("Full Book");
+    await getFullBook(index)
+    console.log(fullBook);
+    document.getElementById("newBookTitle").value = fullBook.title
+    document.getElementById("newImgUrl").value = fullBook.cover
+    document.getElementById("newSummary").value = fullBook.summary
+    document.getElementById("newPrice").value = fullBook.price.shiftedBy(-ERC20_DECIMALS)
   }
 })  
