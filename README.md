@@ -1,7 +1,7 @@
 # Summarize
 Project Demo: https://eduardo-puentes.github.io/summarize/
 
-Summarize is a dapp that lets users to post a summary and/or a opinion of a book, once posted, the user can edit their own summaries, and pay to see others summaries. 
+Summarize is a dapp that lets users to post a summary and/or the message of a book, once posted, the user can edit their own summaries, and pay to see others summaries. 
 
 This, making use of Solidity for building the smart contract and using Cello Extension Wallet to make the transactions to create and buy summaries of diferent books.
 
