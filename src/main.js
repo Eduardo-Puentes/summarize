@@ -1,7 +1,7 @@
 import Web3 from "web3"
 import { newKitFromWeb3 } from "@celo/contractkit"
 import BigNumber from "bignumber.js"
-import marketplaceAbi from "../contract/marketplace.abi.json"
+import marketplaceAbi from "../contract/shelf.abi.json"
 import erc20Abi from "../contract/erc20.abi.json"
 
 const ERC20_DECIMALS = 18
@@ -54,7 +54,7 @@ const getBalance = async function () {
   document.querySelector("#balance").textContent = cUSDBalance
 }
 
-const getProducts = async function() {
+const getBooks = async function() {
   const _booksLength = await contract.methods.getBooksLength().call()
   const _books = []
   for (let i = 0; i < _booksLength; i++) {
@@ -89,6 +89,9 @@ const getFullBook = async function(i) {
       })
     })
   fullBook = await Promise.resolve(_book)
+
+  await getBooks()
+  await getBalance()
 }
 
 function renderBooks() {
@@ -194,7 +197,7 @@ window.addEventListener("load", async () => {
   notification("⌛ Loading...")
   await connectCeloWallet()
   await getBalance()
-  await getProducts()
+  await getBooks()
   notificationOff()
 });
 
@@ -219,7 +222,7 @@ document
         notification(`⚠️ ${error}.`)
       }
       notification(`🎉 You successfully added "${params[0]}".`)
-      getProducts()
+      getBooks()
     }
     else {
       console.log(document.getElementById("newBookTitle").value);
@@ -241,7 +244,7 @@ document
           .send({ from: kit.defaultAccount })
           console.log(result);
           notification(`🎉 You successfully edited "${params[0]}".`)
-      getProducts()
+      getBooks()
       edit = false
       } catch (error) {
         notification(`⚠️ ${error}.`)
